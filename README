@@ -25,6 +25,7 @@ do
 done
 
 or
+
 dirs=(find /usr/share -type d)
 for d in dirs
 do
@@ -33,15 +34,13 @@ done
 
 then tasker can make a huge difference. Rewrite the above to
 
-files=(ls /usr/lib64/*)
-echo $files | tasker process @@
+ls /usr/lib64/*) | tasker process @@
 
 and
 
-dirs=(find /usr/share -type d)
-echo $dirs | tasker process @@
+find /usr/share -type d | tasker process @@
 
-and look at htop now
+and look at htop now.
 
 Tasker is kind of like a xarg but parallelizes the jobs. It determines how
 many cores to use, sets affinity to specific hyperthreads, and keeps all
