@@ -1,0 +1,73 @@
+TASKER
+
+BUILDING
+========
+To build the project run:
+
+./autogen.sh
+./configure
+make
+make install
+
+
+BACKGROUND
+==========
+Have you noticed that we have CPUs with 16 cores and nothing takes advantage
+of it? Take a look at htop. What do you see? Since processes linearly doing
+things. Tasker is here to help.
+
+If you find yourself doing scripting like:
+
+files=(ls /usr/lib64/*)
+for f in files
+do
+	process $f
+done
+
+or
+dirs=(find /usr/share -type d)
+for d in dirs
+do
+	process $d
+done
+
+then tasker can make a huge difference. Rewrite the above to
+
+files=(ls /usr/lib64/*)
+echo $files | tasker process @@
+
+and
+
+dirs=(find /usr/share -type d)
+echo $dirs | tasker process @@
+
+and look at htop now
+
+Tasker is kind of like a xarg but parallelizes the jobs. It determines how
+many cores to use, sets affinity to specific hyperthreads, and keeps all
+hyperthreads busy until the input pipeline is complete.
+
+The @@ is used to denote where to place the input from stdin into the
+command to be executed. It can be a value to an argument, an insert to
+an otherwise complete path name, or the only argument to the process to be
+run.
+
+Here is a contrived example to show how powerful it can be. Suppose we have
+some analysis program that takes about 1 second to run on each input and the
+files are processed linearly:
+
+time -p (ls /usr/lib/systemd/system/*.service | (while IFS='$\n' read -r f; do /usr/bin/sleep 1 ; done))
+real	6m8.601s
+user	0m0.192s
+sys	0m0.296s
+
+Now with tasker:
+
+ls /usr/lib/systemd/system/*.service | time -p tasker /usr/bin/sleep 1
+real 12.01
+user 0.08
+sys 0.07
+
+How is this so? I have 368 service files and 32 hyperthreads. 368 / 32 = 11. So
+12 is in the ballpark.
+
