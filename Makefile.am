@@ -20,7 +20,7 @@
 # Authors:
 #   Steve Grubb <sgrubb@redhat.com>
 
-
+EXTRA_DIST = $(man_MANS)
 AM_CFLAGS = -D_GNU_SOURCE -fopenmp 
 AM_CPPFLAGS = -I.
 AM_LDFLAGS = -fopenmp
