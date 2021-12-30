@@ -13,7 +13,7 @@ make install
 BACKGROUND
 ==========
 Have you noticed that we have CPUs with 16 cores and nothing takes advantage
-of it? Take a look at htop. What do you see? Since processes linearly doing
+of it? Take a look at htop. What do you see? A few processes linearly doing
 things. Tasker is here to help.
 
 If you find yourself doing scripting like:
@@ -43,13 +43,19 @@ find /usr/share -type d | tasker process @@
 and look at htop now.
 
 Tasker is kind of like a xarg but parallelizes the jobs. It determines how
-many cores to use, sets affinity to specific hyperthreads, and keeps all
-hyperthreads busy until the input pipeline is complete.
+many cores to use, sets affinity of individual tasks to specific hyperthreads,
+and keeps all hyperthreads busy until the input pipeline is complete. It also
+waits for all child processes to finish so that no extra barrier is needed
+for synchronization.
 
 The @@ is used to denote where to place the input from stdin into the
 command to be executed. It can be a value to an argument, an insert to
 an otherwise complete path name, or the only argument to the process to be
-run.
+run:
+
+cat list | tasker -m @@
+cat list | tasker /usr/share/@@/
+cat list | tasker @@
 
 Here is a contrived example to show how powerful it can be. Suppose we have
 some analysis program that takes about 1 second to run on each input and the
@@ -67,7 +73,8 @@ real 12.01
 user 0.08
 sys 0.07
 
-How is this so? I have 368 service files and 32 hyperthreads. 368 / 32 = 11. So
-12 is in the ballpark. Even if you have a 4 core system, using tasker should
-get the contrived example down to 46 seconds from 6 minutes.
+How is this so? There are 368 service files on the system and it has 32
+hyperthreads. Therefore, 368 / 32 = 11. So, 12 is in the ballpark. Even if
+you have a 4 core system, using tasker should get the contrived example down
+to 46 seconds from 6 minutes.
 
