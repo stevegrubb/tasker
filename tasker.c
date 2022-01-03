@@ -104,7 +104,7 @@ static void safe_exec(int slot, const char *line)
 	sched_setaffinity(0, sizeof(cpu_set_t), &mask);
 
 	/*  For debugging
-	unsigned int i = 1; printf("%s ", exe);
+	unsigned int i = 1; printf("%s ", my_argv[0]);
 	while (my_argv[i]) printf("%s ", my_argv[i++]); printf("\n"); */
 	execve(my_argv[0], my_argv, NULL);
 	exit(1);
@@ -112,7 +112,6 @@ static void safe_exec(int slot, const char *line)
 
 int main(int argc, char *argv[])
 {
-
 	// count hyperthreads
 	threads = omp_get_max_threads();
 //	printf("Threads: %u\n", threads);
@@ -152,7 +151,6 @@ int main(int argc, char *argv[])
 			// Remember the one to build
 			alter = cnt;
 		} else
-			fprintf(stderr, "No @@ found - likely a mistake\n");
 
 		if (cnt < argc) {
 			my_argv[cnt] = argv[cnt+1];
@@ -160,7 +158,10 @@ int main(int argc, char *argv[])
 			my_argv[cnt] = NULL;
 		}
 	}
-//printf("Begin: %s, end: %s\n", begin, end);
+//printf("Begin: %s, end: %s, alter: %u\n", begin, end, alter);
+
+	if (!alter)
+		fprintf(stderr, "No @@ found - likely a mistake\n");
 
 	// allocate a lookup table
 	pids = malloc(threads * sizeof(atomic_int));
