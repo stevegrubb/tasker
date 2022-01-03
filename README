@@ -40,7 +40,7 @@ and
 
 find /usr/share -type d | tasker process @@
 
-and look at htop now.
+and look at htop now. NOTE: tasker wants the full path to the command to run.
 
 Tasker is kind of like xarg, but parallelizes the jobs. It determines how
 many cores to use, sets affinity of individual tasks to specific hyperthreads,

@@ -8,7 +8,7 @@ Tasker is a program that takes a list from stdin and runs the given command
 passing one line from stdin to the place designated by @@. It is kind of like
 a xargs but parallelizes the jobs. It determines how many cores to use, sets
 affinity to specific hyperthreads, and keeps all hyperthreads busy until the
-input pipeline is complete.
+input pipeline is complete. The command to run must include the full path.
 
 The @@ is used to denote where to place the input from stdin into the
 command to be executed. It can be a value to an argument, an insert to
