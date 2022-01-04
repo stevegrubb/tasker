@@ -21,7 +21,7 @@
 
 atomic_int *pids;
 unsigned int threads;
-#define MAX_ARGS 8
+#define MAX_ARGS 12
 char *my_argv[MAX_ARGS];
 unsigned int alter = 0;
 const char *begin = NULL, *end = NULL;
