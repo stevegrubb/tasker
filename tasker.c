@@ -150,10 +150,21 @@ int main(int argc, char *argv[])
 			}
 			// Remember the one to build
 			alter = cnt;
-		} else
+		}
 
 		if (cnt < argc) {
 			my_argv[cnt] = argv[cnt+1];
+			if (cnt == 0) {
+				if (my_argv[0][0] != '/') {
+					fprintf(stderr,
+				      "Error - commands need the full path\n");
+					return 1;
+				} else if (access(my_argv[0], X_OK)) {
+					fprintf(stderr,
+			      "Error - command not found or not executable\n");
+					return 1;
+				}
+			}
 		} else {
 			my_argv[cnt] = NULL;
 		}
