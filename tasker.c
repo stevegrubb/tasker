@@ -155,7 +155,8 @@ int main(int argc, char *argv[])
 		if (cnt < argc) {
 			my_argv[cnt] = argv[cnt+1];
 			if (cnt == 0) {
-				if (my_argv[0][0] != '/') {
+				if (my_argv[0][0] != '/' &&
+				    strncmp(my_argv[0], "./", 2)) {
 					fprintf(stderr,
 				      "Error - commands need the full path\n");
 					return 1;
