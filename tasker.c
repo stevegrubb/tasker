@@ -106,7 +106,9 @@ static void safe_exec(int slot, const char *line)
 	/*  For debugging
 	unsigned int i = 1; printf("%s ", my_argv[0]);
 	while (my_argv[i]) printf("%s ", my_argv[i++]); printf("\n"); */
-	execve(my_argv[0], my_argv, NULL);
+
+	// Pass existing environment to child
+	execv(my_argv[0], my_argv);
 	exit(1);
 }
 
